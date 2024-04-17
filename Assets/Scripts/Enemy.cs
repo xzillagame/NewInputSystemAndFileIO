@@ -54,8 +54,6 @@ public class Enemy : MonoBehaviour
     Vector3 startingLocataion;
     public Vector3 StartingLocation { get { return startingLocataion; } }
 
-
-    float currentStateElapsed = 0f;
     
     // Start is called before the first frame update
     void Start()

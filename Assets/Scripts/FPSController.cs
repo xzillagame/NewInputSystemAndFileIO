@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FPSController : MonoBehaviour
 {
@@ -28,11 +29,27 @@ public class FPSController : MonoBehaviour
 
     // properties
     public GameObject Cam { get { return cam; } }
+
+
+    //private Input Action Mapping
     
+
 
     private void Awake()
     {
         
+    }
+
+    private void OnEnable()
+    {
+        PlayerInputManager.playerControls.Enable();
+        PlayerInputManager.playerControls.FPSControles.Jump.performed += OnJump;
+    }
+
+    private void OnDisable()
+    {
+        PlayerInputManager.playerControls.FPSControles.Jump.performed -= OnJump;
+        PlayerInputManager.playerControls.Disable();
     }
 
     // Start is called before the first frame update
@@ -75,10 +92,10 @@ public class FPSController : MonoBehaviour
         Vector3 move = transform.right * movement.x + transform.forward * movement.y;
         controller.Move(move * movementSpeed * (GetSprint() ? 2 : 1) * Time.deltaTime);
 
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            velocity.y += Mathf.Sqrt (jumpForce * -1 * gravity);
-        }
+        //if (Input.GetButtonDown("Jump") && grounded)
+        //{
+        //    velocity.y += Mathf.Sqrt (jumpForce * -1 * gravity);
+        //}
 
         velocity.y += gravity * Time.deltaTime;
 
@@ -219,6 +236,19 @@ public class FPSController : MonoBehaviour
     {
         return Input.GetButton("Sprint");
     }
+
+
+    //Added Functions by Xavian Escamilla 4/17/24
+    private void OnJump(InputAction.CallbackContext ctx)
+    {
+
+        if(grounded == true) 
+        {
+            velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
+        }
+
+    }
+
 
     // Collision methods
 

@@ -1,0 +1,34 @@
+{
+    "name": "IA_PlayerControls",
+    "maps": [
+        {
+            "name": "FPSControles",
+            "id": "d4484988-579d-4a75-9a44-b81721b76582",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "d872633d-72fc-4be4-9d33-70498ea072f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "35b1c847-fcac-41f0-a52b-335645528040",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
