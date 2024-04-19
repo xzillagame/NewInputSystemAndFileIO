@@ -31,24 +31,23 @@ public class FPSController : MonoBehaviour
     public GameObject Cam { get { return cam; } }
 
 
-    //private Input Action Mapping
-    
+    //New Input Variables
 
+    private Vector2 movement;
+    private bool isFiring;
 
-    private void Awake()
-    {
-        
-    }
 
     private void OnEnable()
     {
         PlayerInputManager.playerControls.Enable();
         PlayerInputManager.playerControls.FPSControles.Jump.performed += OnJump;
+        PlayerInputManager.playerControls.FPSControles.PrimaryShoot.performed += OnFire;
     }
 
     private void OnDisable()
     {
         PlayerInputManager.playerControls.FPSControles.Jump.performed -= OnJump;
+        PlayerInputManager.playerControls.FPSControles.PrimaryShoot.performed -= OnFire;
         PlayerInputManager.playerControls.Disable();
     }
 
@@ -57,6 +56,8 @@ public class FPSController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+
+        movement = Vector2.zero;
 
         // start with a gun
         if(initialGun != null)
@@ -71,7 +72,7 @@ public class FPSController : MonoBehaviour
         Movement();
         Look();
         HandleSwitchGun();
-        FireGun();
+        //FireGun();
 
         // always go back to "no velocity"
         // "velocity" is for movement speed that we gain in addition to our movement (falling, knockback, etc.)
@@ -88,14 +89,12 @@ public class FPSController : MonoBehaviour
             velocity.y = -1;// -0.5f;
         }
 
-        Vector2 movement = GetPlayerMovementVector();
+        //Now uses the New Input System
+        Vector2 movement = PlayerInputManager.playerControls.FPSControles.Movement.ReadValue<Vector2>();
+
         Vector3 move = transform.right * movement.x + transform.forward * movement.y;
         controller.Move(move * movementSpeed * (GetSprint() ? 2 : 1) * Time.deltaTime);
 
-        //if (Input.GetButtonDown("Jump") && grounded)
-        //{
-        //    velocity.y += Mathf.Sqrt (jumpForce * -1 * gravity);
-        //}
 
         velocity.y += gravity * Time.deltaTime;
 
@@ -145,6 +144,8 @@ public class FPSController : MonoBehaviour
         // don't fire if we don't have a gun
         if (currentGun == null)
             return;
+
+
 
         // pressed the fire button
         if(GetPressFire())
@@ -242,12 +243,20 @@ public class FPSController : MonoBehaviour
     private void OnJump(InputAction.CallbackContext ctx)
     {
 
-        if(grounded == true) 
+        if (grounded == true)
         {
             velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
         }
 
     }
+
+    private void OnFire(InputAction.CallbackContext ctx)
+    {
+        //currentGun?.AttemptFire();
+        isFiring = true;
+        Debug.Log("Fire");
+    }
+
 
 
     // Collision methods

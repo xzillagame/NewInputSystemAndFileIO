@@ -35,6 +35,24 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimaryShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6c13e0d-831a-4587-a2bc-be36f724d06b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2),Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""d4e10639-7af8-410c-8cbf-96fddc6e959f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -48,6 +66,72 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22b91bad-d5f6-4204-890c-a2df54d19c49"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD Movement"",
+                    ""id"": ""236b58cf-01d2-46f4-a984-197b1b7c5220"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""4027d0c6-390c-440f-b50e-f7d207004d93"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d9f06ac6-43fe-4f40-a324-b407375f8dd8"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a6103e12-a015-4950-b7e4-a866f809ee97"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""46b9208e-3e48-41f0-975f-ac4807fb1949"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -57,6 +141,8 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
         // FPSControles
         m_FPSControles = asset.FindActionMap("FPSControles", throwIfNotFound: true);
         m_FPSControles_Jump = m_FPSControles.FindAction("Jump", throwIfNotFound: true);
+        m_FPSControles_PrimaryShoot = m_FPSControles.FindAction("PrimaryShoot", throwIfNotFound: true);
+        m_FPSControles_Movement = m_FPSControles.FindAction("Movement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -119,11 +205,15 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_FPSControles;
     private List<IFPSControlesActions> m_FPSControlesActionsCallbackInterfaces = new List<IFPSControlesActions>();
     private readonly InputAction m_FPSControles_Jump;
+    private readonly InputAction m_FPSControles_PrimaryShoot;
+    private readonly InputAction m_FPSControles_Movement;
     public struct FPSControlesActions
     {
         private @IA_PlayerControls m_Wrapper;
         public FPSControlesActions(@IA_PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_FPSControles_Jump;
+        public InputAction @PrimaryShoot => m_Wrapper.m_FPSControles_PrimaryShoot;
+        public InputAction @Movement => m_Wrapper.m_FPSControles_Movement;
         public InputActionMap Get() { return m_Wrapper.m_FPSControles; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -136,6 +226,12 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @PrimaryShoot.started += instance.OnPrimaryShoot;
+            @PrimaryShoot.performed += instance.OnPrimaryShoot;
+            @PrimaryShoot.canceled += instance.OnPrimaryShoot;
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
         }
 
         private void UnregisterCallbacks(IFPSControlesActions instance)
@@ -143,6 +239,12 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @PrimaryShoot.started -= instance.OnPrimaryShoot;
+            @PrimaryShoot.performed -= instance.OnPrimaryShoot;
+            @PrimaryShoot.canceled -= instance.OnPrimaryShoot;
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
         }
 
         public void RemoveCallbacks(IFPSControlesActions instance)
@@ -163,5 +265,7 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
     public interface IFPSControlesActions
     {
         void OnJump(InputAction.CallbackContext context);
+        void OnPrimaryShoot(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
     }
 }
