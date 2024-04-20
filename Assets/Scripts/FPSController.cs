@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.IO;
 
 public class FPSController : MonoBehaviour
 {
@@ -31,23 +32,26 @@ public class FPSController : MonoBehaviour
     public GameObject Cam { get { return cam; } }
 
 
-    //New Input Variables
-
-    private Vector2 movement;
-    private bool isFiring;
+    //Save Data Variables
+    private float health = 50;
 
 
     private void OnEnable()
-    {
+    { 
+
         PlayerInputManager.playerControls.Enable();
         PlayerInputManager.playerControls.FPSControles.Jump.performed += OnJump;
         PlayerInputManager.playerControls.FPSControles.PrimaryShoot.performed += OnFire;
+        PlayerInputManager.playerControls.FPSControles.SwapWeapons.performed += OnWeaponSwap;
+        PlayerInputManager.playerControls.FPSControles.AlternateShoot.performed += OnAltWeaponFire;
     }
 
     private void OnDisable()
     {
         PlayerInputManager.playerControls.FPSControles.Jump.performed -= OnJump;
         PlayerInputManager.playerControls.FPSControles.PrimaryShoot.performed -= OnFire;
+        PlayerInputManager.playerControls.FPSControles.SwapWeapons.performed -= OnWeaponSwap;
+        PlayerInputManager.playerControls.FPSControles.AlternateShoot.performed -= OnAltWeaponFire;
         PlayerInputManager.playerControls.Disable();
     }
 
@@ -56,8 +60,6 @@ public class FPSController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
-
-        movement = Vector2.zero;
 
         // start with a gun
         if(initialGun != null)
@@ -71,8 +73,13 @@ public class FPSController : MonoBehaviour
     {
         Movement();
         Look();
-        HandleSwitchGun();
-        //FireGun();
+
+        if(PlayerInputManager.playerControls.FPSControles.PrimaryAutomaticShoot.IsPressed() == true && currentGun?.AttemptAutomaticFire() == true)
+        {
+            currentGun?.AttemptFire();
+        }
+
+
 
         // always go back to "no velocity"
         // "velocity" is for movement speed that we gain in addition to our movement (falling, knockback, etc.)
@@ -93,7 +100,7 @@ public class FPSController : MonoBehaviour
         Vector2 movement = PlayerInputManager.playerControls.FPSControles.Movement.ReadValue<Vector2>();
 
         Vector3 move = transform.right * movement.x + transform.forward * movement.y;
-        controller.Move(move * movementSpeed * (GetSprint() ? 2 : 1) * Time.deltaTime);
+        controller.Move(move * movementSpeed * (PlayerInputManager.playerControls.FPSControles.Sprint.IsPressed() ? 2 : 1) * Time.deltaTime);
 
 
         velocity.y += gravity * Time.deltaTime;
@@ -103,7 +110,7 @@ public class FPSController : MonoBehaviour
 
     void Look()
     {
-        Vector2 looking = GetPlayerLook();
+        Vector2 looking = PlayerInputManager.playerControls.FPSControles.Look.ReadValue<Vector2>();
         float lookX = looking.x * lookSensitivityX * Time.deltaTime;
         float lookY = looking.y * lookSensitivityY * Time.deltaTime;
 
@@ -139,33 +146,6 @@ public class FPSController : MonoBehaviour
         }
     }
 
-    void FireGun()
-    {
-        // don't fire if we don't have a gun
-        if (currentGun == null)
-            return;
-
-
-
-        // pressed the fire button
-        if(GetPressFire())
-        {
-            currentGun?.AttemptFire();
-        }
-
-        // holding the fire button (for automatic)
-        else if(GetHoldFire())
-        {
-            if (currentGun.AttemptAutomaticFire())
-                currentGun?.AttemptFire();
-        }
-
-        // pressed the alt fire button
-        if (GetPressAltFire())
-        {
-            currentGun?.AttemptAltFire();
-        }
-    }
 
     void EquipGun(Gun g)
     {
@@ -207,6 +187,31 @@ public class FPSController : MonoBehaviour
     }
 
     // Input methods
+    void FireGun()
+    {
+        // don't fire if we don't have a gun
+        if (currentGun == null)
+            return;
+
+        // pressed the fire button
+        if(GetPressFire())
+        {
+            currentGun?.AttemptFire();
+        }
+
+        // holding the fire button (for automatic)
+        else if(GetHoldFire())
+        {
+            if (currentGun.AttemptAutomaticFire())
+                currentGun?.AttemptFire();
+        }
+
+        // pressed the alt fire button
+        if (GetPressAltFire())
+        {
+            currentGun?.AttemptAltFire();
+        }
+    }
 
     bool GetPressFire()
     {
@@ -252,12 +257,87 @@ public class FPSController : MonoBehaviour
 
     private void OnFire(InputAction.CallbackContext ctx)
     {
-        //currentGun?.AttemptFire();
-        isFiring = true;
-        Debug.Log("Fire");
+        if (currentGun?.AttemptAutomaticFire() == true)
+        {
+            return;
+        }
+        currentGun?.AttemptFire();
+    }
+
+    private void OnAltWeaponFire(InputAction.CallbackContext ctx)
+    {
+        currentGun?.AttemptAltFire();
+    }
+
+    private void OnWeaponSwap(InputAction.CallbackContext ctx)
+    {
+        if (equippedGuns.Count == 0)
+            return;
+
+        float axis = ctx.ReadValue<float>();
+
+        if (axis > 0)
+        {
+            gunIndex++;
+            if (gunIndex > equippedGuns.Count - 1)
+                gunIndex = 0;
+
+            EquipGun(equippedGuns[gunIndex]);
+        }
+
+        else if (axis < 0)
+        {
+            gunIndex--;
+            if (gunIndex < 0)
+                gunIndex = equippedGuns.Count - 1;
+
+            EquipGun(equippedGuns[gunIndex]);
+        }
     }
 
 
+    public void OnSave()
+    {
+        SaveData newSaveData = new SaveData();
+        newSaveData.position = transform.position;
+        newSaveData.playerHealth = health;
+
+        if(currentGun != null)
+        {
+            newSaveData.currentAmmo = currentGun.GetCurrentAmmo();
+        }
+
+        string saveData = JsonUtility.ToJson(newSaveData);
+        File.WriteAllText(Application.dataPath + "/FPSSaveData.json", saveData);
+
+    }
+
+
+    public void OnLoad()
+    {
+        if(!File.Exists(Application.dataPath + "/FPSSaveData.json"))
+        {
+            Debug.Log("Save Data Does Not Exist");
+            return;
+        }
+
+        string saveText = File.ReadAllText(Application.dataPath + "/FPSSaveData.json");
+
+        //Disable controller to allow position to be adjusted
+        controller.enabled = false;
+
+        SaveData loadData = JsonUtility.FromJson<SaveData>(saveText);
+        transform.position = loadData.position;
+        health = loadData.playerHealth;
+
+        if (currentGun != null)
+        {
+            currentGun.AddAmmo(loadData.currentAmmo);
+        }
+
+        controller.enabled = true;
+
+    }
 
     // Collision methods
 
@@ -277,5 +357,15 @@ public class FPSController : MonoBehaviour
         }
     }
 
+
+}
+
+public class SaveData
+{
+    public Vector3 position;
+    public float playerHealth;
+    public int currentAmmo = 0;
+
+    public SaveData() { }
 
 }

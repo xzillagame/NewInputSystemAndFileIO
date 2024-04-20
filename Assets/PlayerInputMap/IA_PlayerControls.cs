@@ -42,7 +42,25 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
                     ""id"": ""f6c13e0d-831a-4587-a2bc-be36f724d06b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2),Hold"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimaryAutomaticShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd36c208-2076-4a21-9ae8-01ae7caaf1df"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AlternateShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""ddbda821-652d-4927-8b08-a5f2c4801a12"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -53,6 +71,42 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""54646b08-e003-48d5-89f1-858077c00d1a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""8d1061ac-3fef-4ac8-b3bd-7305a245e37f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwapWeapons"",
+                    ""type"": ""Value"",
+                    ""id"": ""6227a848-736d-4b9e-b6a4-9b6f18e3e5f1"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PausePressed"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfbb29d7-683a-49b1-ba53-e3e97e0bc431"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +186,94 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""507b316d-b0fc-4386-acb3-04066c59ea2b"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8acfea5-a27e-4822-a559-4798bf727fb1"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""ca162bdd-580f-48ff-a166-314bb6bc18b6"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapWeapons"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""cbe09f5f-0530-4dfb-9e48-62f8196492e6"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""20d70dce-cd82-4872-9a8d-c7c1702580ac"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73fcdbfd-4288-4fea-961b-b9991397736b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryAutomaticShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c55bc8af-ed45-4edb-91af-3260caefffc6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AlternateShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3075022b-0f9c-4825-b2d2-38cddd3fc8b2"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PausePressed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -142,7 +284,13 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
         m_FPSControles = asset.FindActionMap("FPSControles", throwIfNotFound: true);
         m_FPSControles_Jump = m_FPSControles.FindAction("Jump", throwIfNotFound: true);
         m_FPSControles_PrimaryShoot = m_FPSControles.FindAction("PrimaryShoot", throwIfNotFound: true);
+        m_FPSControles_PrimaryAutomaticShoot = m_FPSControles.FindAction("PrimaryAutomaticShoot", throwIfNotFound: true);
+        m_FPSControles_AlternateShoot = m_FPSControles.FindAction("AlternateShoot", throwIfNotFound: true);
         m_FPSControles_Movement = m_FPSControles.FindAction("Movement", throwIfNotFound: true);
+        m_FPSControles_Sprint = m_FPSControles.FindAction("Sprint", throwIfNotFound: true);
+        m_FPSControles_Look = m_FPSControles.FindAction("Look", throwIfNotFound: true);
+        m_FPSControles_SwapWeapons = m_FPSControles.FindAction("SwapWeapons", throwIfNotFound: true);
+        m_FPSControles_PausePressed = m_FPSControles.FindAction("PausePressed", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -206,14 +354,26 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
     private List<IFPSControlesActions> m_FPSControlesActionsCallbackInterfaces = new List<IFPSControlesActions>();
     private readonly InputAction m_FPSControles_Jump;
     private readonly InputAction m_FPSControles_PrimaryShoot;
+    private readonly InputAction m_FPSControles_PrimaryAutomaticShoot;
+    private readonly InputAction m_FPSControles_AlternateShoot;
     private readonly InputAction m_FPSControles_Movement;
+    private readonly InputAction m_FPSControles_Sprint;
+    private readonly InputAction m_FPSControles_Look;
+    private readonly InputAction m_FPSControles_SwapWeapons;
+    private readonly InputAction m_FPSControles_PausePressed;
     public struct FPSControlesActions
     {
         private @IA_PlayerControls m_Wrapper;
         public FPSControlesActions(@IA_PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_FPSControles_Jump;
         public InputAction @PrimaryShoot => m_Wrapper.m_FPSControles_PrimaryShoot;
+        public InputAction @PrimaryAutomaticShoot => m_Wrapper.m_FPSControles_PrimaryAutomaticShoot;
+        public InputAction @AlternateShoot => m_Wrapper.m_FPSControles_AlternateShoot;
         public InputAction @Movement => m_Wrapper.m_FPSControles_Movement;
+        public InputAction @Sprint => m_Wrapper.m_FPSControles_Sprint;
+        public InputAction @Look => m_Wrapper.m_FPSControles_Look;
+        public InputAction @SwapWeapons => m_Wrapper.m_FPSControles_SwapWeapons;
+        public InputAction @PausePressed => m_Wrapper.m_FPSControles_PausePressed;
         public InputActionMap Get() { return m_Wrapper.m_FPSControles; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -229,9 +389,27 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
             @PrimaryShoot.started += instance.OnPrimaryShoot;
             @PrimaryShoot.performed += instance.OnPrimaryShoot;
             @PrimaryShoot.canceled += instance.OnPrimaryShoot;
+            @PrimaryAutomaticShoot.started += instance.OnPrimaryAutomaticShoot;
+            @PrimaryAutomaticShoot.performed += instance.OnPrimaryAutomaticShoot;
+            @PrimaryAutomaticShoot.canceled += instance.OnPrimaryAutomaticShoot;
+            @AlternateShoot.started += instance.OnAlternateShoot;
+            @AlternateShoot.performed += instance.OnAlternateShoot;
+            @AlternateShoot.canceled += instance.OnAlternateShoot;
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
+            @SwapWeapons.started += instance.OnSwapWeapons;
+            @SwapWeapons.performed += instance.OnSwapWeapons;
+            @SwapWeapons.canceled += instance.OnSwapWeapons;
+            @PausePressed.started += instance.OnPausePressed;
+            @PausePressed.performed += instance.OnPausePressed;
+            @PausePressed.canceled += instance.OnPausePressed;
         }
 
         private void UnregisterCallbacks(IFPSControlesActions instance)
@@ -242,9 +420,27 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
             @PrimaryShoot.started -= instance.OnPrimaryShoot;
             @PrimaryShoot.performed -= instance.OnPrimaryShoot;
             @PrimaryShoot.canceled -= instance.OnPrimaryShoot;
+            @PrimaryAutomaticShoot.started -= instance.OnPrimaryAutomaticShoot;
+            @PrimaryAutomaticShoot.performed -= instance.OnPrimaryAutomaticShoot;
+            @PrimaryAutomaticShoot.canceled -= instance.OnPrimaryAutomaticShoot;
+            @AlternateShoot.started -= instance.OnAlternateShoot;
+            @AlternateShoot.performed -= instance.OnAlternateShoot;
+            @AlternateShoot.canceled -= instance.OnAlternateShoot;
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
+            @SwapWeapons.started -= instance.OnSwapWeapons;
+            @SwapWeapons.performed -= instance.OnSwapWeapons;
+            @SwapWeapons.canceled -= instance.OnSwapWeapons;
+            @PausePressed.started -= instance.OnPausePressed;
+            @PausePressed.performed -= instance.OnPausePressed;
+            @PausePressed.canceled -= instance.OnPausePressed;
         }
 
         public void RemoveCallbacks(IFPSControlesActions instance)
@@ -266,6 +462,12 @@ public partial class @IA_PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnJump(InputAction.CallbackContext context);
         void OnPrimaryShoot(InputAction.CallbackContext context);
+        void OnPrimaryAutomaticShoot(InputAction.CallbackContext context);
+        void OnAlternateShoot(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
+        void OnSwapWeapons(InputAction.CallbackContext context);
+        void OnPausePressed(InputAction.CallbackContext context);
     }
 }
